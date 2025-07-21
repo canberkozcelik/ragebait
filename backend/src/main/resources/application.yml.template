@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: ragebait
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: <YOUR_DB_PASSWORD_HERE> # <-- Set your DB password here
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+gemini:
+  api-key: <YOUR_GEMINI_API_KEY_HERE> # <-- Set your Gemini API key here
+  base-url: https://generativelanguage.googleapis.com/
+  prompt-template: "Write an outrageous opinion piece about %s as if it were ragebait on social media. Keep it under 140 characters."
+  credentials:
+    json: "classpath:credentials/<YOUR_SERVICE_ACCOUNT_JSON_HERE>" # <-- Set your service account JSON path here
+
+ai:
+  client:
+    timeout: 5s 

@@ -1,0 +1,104 @@
+# =========================
+# Global ignores (all OSes)
+# =========================
+.DS_Store           # macOS Finder metadata
+Thumbs.db           # Windows Explorer metadata
+*.swp               # Vim swap files
+*.log               # Log files
+
+# =========================
+# Environment/Sensitive
+# =========================
+.env                 # Environment variables (backend/frontend)
+*.keystore           # Android keystore files
+*.jks                # Java keystore files
+
+# =========================
+# Backend (Kotlin/Spring)
+# =========================
+.gradle/
+build/
+out/
+bin/
+!gradle/wrapper/gradle-wrapper.jar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse/STS
+.apt_generated/
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans/
+.sts4-cache/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+
+# Kotlin
+.kotlin/
+
+# =========================
+# Flutter/Dart (mobile/)
+# =========================
+mobile/.dart_tool/
+mobile/.packages
+mobile/build/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.metadata
+mobile/.idea/
+mobile/.vscode/
+mobile/pubspec.lock
+mobile/coverage/
+mobile/test_output/
+mobile/ios/Flutter/Flutter.framework
+mobile/ios/Flutter/Flutter.podspec
+mobile/ios/Flutter/Generated.xcconfig
+mobile/ios/Flutter/app.flx
+mobile/ios/Flutter/app.zip
+mobile/ios/Flutter/flutter_assets/
+mobile/ios/Flutter/flutter_export_environment.sh
+mobile/ios/ServiceDefinitions.json
+mobile/ios/Runner/GeneratedPluginRegistrant.*
+
+# Android
+mobile/android/.gradle/
+mobile/android/app/build/
+mobile/android/local.properties
+
+# Dart/Flutter generated code (optional, often checked in for codegen)
+# Uncomment if you do NOT want to check in generated files:
+# mobile/lib/**/*.g.dart
+# mobile/lib/**/*.freezed.dart
+
+# =========================
+# Test/Coverage Artifacts
+# =========================
+coverage/
+**/coverage/
+**/test_output/
+
+# =========================
+# Miscellaneous
+# =========================
+*.tmp
+*.temp
+
+# Ignore sensitive Spring Boot config
+backend/src/main/resources/application.yml
+
+# Ignore sensitive credentials directory
+backend/src/main/resources/credentials/
