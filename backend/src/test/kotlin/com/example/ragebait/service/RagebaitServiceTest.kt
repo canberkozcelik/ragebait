@@ -13,7 +13,7 @@ import java.time.Duration
 import java.util.concurrent.TimeoutException
 import org.springframework.web.server.ResponseStatusException
 
-@SpringBootTest
+@SpringBootTest(properties = ["ai.client.timeout=2s"])
 class RagebaitServiceTest {
 
     @MockitoBean

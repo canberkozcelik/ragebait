@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.bind.support.WebExchangeBindException
 import java.time.LocalDateTime
 import java.util.UUID
 
@@ -40,6 +41,20 @@ class GlobalExceptionHandler {
             requestId = getRequestId(exchange)
         )
         return ResponseEntity.status(ex.statusCode).body(error)
+    }
+
+    @ExceptionHandler(WebExchangeBindException::class)
+    fun handleWebExchangeBindException(ex: WebExchangeBindException, exchange: ServerWebExchange): ResponseEntity<ErrorResponse> {
+        val errors = ex.bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" }
+        val error = ErrorResponse(
+            timestamp = LocalDateTime.now(),
+            status = HttpStatus.BAD_REQUEST.value(),
+            error = "Validation failure",
+            message = errors.joinToString(", "),
+            path = exchange.request.path.toString(),
+            requestId = getRequestId(exchange)
+        )
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error)
     }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
