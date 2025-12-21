@@ -17,7 +17,13 @@ import reactor.util.retry.Retry
 import java.time.Duration
 import java.util.concurrent.TimeoutException
 
-@WebFluxTest(RagebaitController::class)
+@WebFluxTest(
+    controllers = [RagebaitController::class],
+    excludeFilters = [org.springframework.context.annotation.ComponentScan.Filter(
+        type = org.springframework.context.annotation.FilterType.ASSIGNABLE_TYPE,
+        classes = [com.example.ragebait.security.AuthenticationFilter::class]
+    )]
+)
 @Import(RagebaitService::class)
 class RagebaitControllerTest(@Autowired val webTestClient: WebTestClient) {
 

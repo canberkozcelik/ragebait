@@ -19,17 +19,26 @@ class RagebaitServiceTest {
     @MockitoBean
     private lateinit var aiClient: GenerativeAiClient
 
+    @MockitoBean
+    private lateinit var appUserRepository: com.example.ragebait.repository.AppUserRepository
+
+    @MockitoBean
+    private lateinit var requestLogRepository: com.example.ragebait.repository.RequestLogRepository
+
     @Autowired
     private lateinit var ragebaitService: RagebaitService
 
     @Test
-    fun `should return generated text`() {
+    fun `should return generated text for premium user`() {
         val topic = "cats"
         val fakeOutput = "Cats are overrated pets."
+        val userId = "test-user"
 
         whenever(aiClient.generateRagebait(topic)).thenReturn(Mono.just(fakeOutput))
+        whenever(appUserRepository.findById(userId)).thenReturn(java.util.Optional.of(com.example.ragebait.entity.AppUser(userId, true)))
 
         val result = ragebaitService.generateTextAndSave(topic)
+            .contextWrite(reactor.util.context.Context.of(com.example.ragebait.security.AuthenticationFilter.USER_ID_CONTEXT_KEY, userId))
 
         StepVerifier.create(result)
             .expectNextMatches { post ->
@@ -41,10 +50,14 @@ class RagebaitServiceTest {
     @Test
     fun `should handle AI client failure`() {
         val topic = "dogs"
+        val userId = "test-user"
+        
+        whenever(appUserRepository.findById(userId)).thenReturn(java.util.Optional.of(com.example.ragebait.entity.AppUser(userId, true)))
         whenever(aiClient.generateRagebait(topic))
             .thenReturn(Mono.error(RuntimeException("AI service unavailable")))
 
         val result = ragebaitService.generateTextAndSave(topic)
+            .contextWrite(reactor.util.context.Context.of(com.example.ragebait.security.AuthenticationFilter.USER_ID_CONTEXT_KEY, userId))
 
         StepVerifier.create(result)
             .expectError(RuntimeException::class.java)
@@ -54,11 +67,15 @@ class RagebaitServiceTest {
     @Test
     fun `should handle timeout from AI client`() {
         val topic = "birds"
+        val userId = "test-user"
+
+        whenever(appUserRepository.findById(userId)).thenReturn(java.util.Optional.of(com.example.ragebait.entity.AppUser(userId, true)))
         whenever(aiClient.generateRagebait(topic))
             .thenReturn(Mono.delay(Duration.ofSeconds(4))
                 .thenReturn("Birds are not real"))
 
         val result = ragebaitService.generateTextAndSave(topic)
+            .contextWrite(reactor.util.context.Context.of(com.example.ragebait.security.AuthenticationFilter.USER_ID_CONTEXT_KEY, userId))
 
         StepVerifier.create(result)
             .expectError(ResponseStatusException::class.java)
@@ -68,10 +85,14 @@ class RagebaitServiceTest {
     @Test
     fun `should handle empty topic`() {
         val topic = ""
+        val userId = "test-user"
+
+        whenever(appUserRepository.findById(userId)).thenReturn(java.util.Optional.of(com.example.ragebait.entity.AppUser(userId, true)))
         whenever(aiClient.generateRagebait(topic))
             .thenReturn(Mono.just("Empty topic response"))
 
         val result = ragebaitService.generateTextAndSave(topic)
+             .contextWrite(reactor.util.context.Context.of(com.example.ragebait.security.AuthenticationFilter.USER_ID_CONTEXT_KEY, userId))
 
         StepVerifier.create(result)
             .expectNextMatches { post ->

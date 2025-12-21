@@ -25,6 +25,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-database-postgresql")
 	implementation("org.springframework.boot:spring-boot-starter-logging")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -36,6 +37,7 @@ dependencies {
 	implementation("com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0")
 	implementation("com.google.api-client:google-api-client:1.35.0")
 	implementation("com.google.auth:google-auth-library-oauth2-http:1.11.0")
+	implementation("com.google.firebase:firebase-admin:9.2.0")
 
 	// OpenAPI Documentation
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")

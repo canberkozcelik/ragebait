@@ -83,7 +83,35 @@ class GlobalExceptionHandler {
         )
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(error)
     }
+    
+    @ExceptionHandler(com.example.ragebait.security.UnauthorizedException::class)
+    fun handleUnauthorizedException(ex: com.example.ragebait.security.UnauthorizedException, exchange: ServerWebExchange): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            timestamp = LocalDateTime.now(),
+            status = HttpStatus.UNAUTHORIZED.value(),
+            error = "Unauthorized",
+            message = ex.message ?: "Authentication failed",
+            path = exchange.request.path.toString(),
+            requestId = getRequestId(exchange)
+        )
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error)
+    }
+
+    @ExceptionHandler(QuotaExceededException::class)
+    fun handleQuotaExceededException(ex: QuotaExceededException, exchange: ServerWebExchange): ResponseEntity<ErrorResponse> {
+        val error = ErrorResponse(
+            timestamp = LocalDateTime.now(),
+            status = HttpStatus.FORBIDDEN.value(),
+            error = "Quota exceeded",
+            message = ex.message ?: "You have reached the free limit. Please upgrade to continue.",
+            path = exchange.request.path.toString(),
+            requestId = getRequestId(exchange)
+        )
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error)
+    }
 }
+
+class QuotaExceededException(message: String) : RuntimeException(message)
 
 data class ErrorResponse(
     val timestamp: LocalDateTime,
