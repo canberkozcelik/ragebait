@@ -1,0 +1,57 @@
+{
+  "identifier" : "RevenueCat",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_storeKitError" : 0
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "E2B1F90A",
+      "localizations" : [
+        {
+          "description" : "Ragebait Subscriptions",
+          "displayName" : "Subscriptions",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "One",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "12345678",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly Ragebait Subscription",
+              "displayName" : "Monthly Access",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "ragebait_sub_monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly Access",
+          "subscriptionGroupID" : "E2B1F90A",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

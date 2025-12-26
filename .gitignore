@@ -102,3 +102,4 @@ backend/src/main/resources/application.yml
 
 # Ignore sensitive credentials directory
 backend/src/main/resources/credentials/
+mobile/ios/Runner/GoogleService-Info.plist
