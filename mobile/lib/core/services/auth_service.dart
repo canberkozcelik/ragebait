@@ -24,9 +24,9 @@ class AuthService {
     try {
       final userCredential = await _firebaseAuth.signInAnonymously();
       return userCredential.user;
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException {
       // Handle error gracefully (maybe log it)
-      print("Firebase Auth Error: ${e.code}");
+      // print("Firebase Auth Error: ${e.code}");
       return null;
     }
   }

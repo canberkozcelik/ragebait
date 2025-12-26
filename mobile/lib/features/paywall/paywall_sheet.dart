@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/paywall_service.dart';
-import '../../core/components/primary_button.dart';
-import '../../core/theme/app_colors.dart';
 
-class PaywallSheet extends ConsumerStatefulWidget {
+ class PaywallSheet extends ConsumerStatefulWidget {
   const PaywallSheet({super.key});
 
   @override
@@ -60,9 +57,10 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
         await _handleSuccessfulPurchase();
       }
 
-      setState(() => _isPurchasing = false);
-      // Restore might fail silently but we still close if success?
-      // Logic from before:
+       setState(() => _isPurchasing = false);
+      
+       if (!mounted) return;
+
        if (success) {
          // handled in helper
        } else {

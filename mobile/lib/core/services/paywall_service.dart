@@ -26,8 +26,8 @@ class PaywallService {
     try {
       CustomerInfo customerInfo = await Purchases.getCustomerInfo();
       return customerInfo.entitlements.all[_entitlementId]?.isActive ?? false;
-    } on PlatformException catch (e) {
-      print("Error fetching customer info: $e");
+    } on PlatformException catch (_) {
+      // print("Error fetching customer info: $e");
       return false;
     }
   }
@@ -39,7 +39,7 @@ class PaywallService {
     } on PlatformException catch (e) {
       var errorCode = PurchasesErrorHelper.getErrorCode(e);
       if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
-         print("Error purchasing: $e");
+         // print("Error purchasing: $e");
       }
       return false;
     }
@@ -49,8 +49,8 @@ class PaywallService {
     try {
       CustomerInfo customerInfo = await Purchases.restorePurchases();
       return customerInfo.entitlements.all[_entitlementId]?.isActive ?? false;
-    } on PlatformException catch (e) {
-       print("Error restoring: $e");
+    } on PlatformException catch (_) {
+       // print("Error restoring: $e");
       return false;
     }
   }
@@ -61,8 +61,8 @@ class PaywallService {
       if (offerings.current != null && offerings.current!.availablePackages.isNotEmpty) {
         return offerings.current!.availablePackages;
       }
-    } on PlatformException catch (e) {
-       print("Error fetching offerings: $e");
+    } on PlatformException catch (_) {
+       // print("Error fetching offerings: $e");
     }
     return [];
   }

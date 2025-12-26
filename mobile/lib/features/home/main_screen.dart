@@ -82,6 +82,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
     );
 
     if (success == true) {
+       if (!mounted) return;
        // Retry generation automatically if they purchased? 
        // For now, just let them tap the button again.
        ScaffoldMessenger.of(context).showSnackBar(
