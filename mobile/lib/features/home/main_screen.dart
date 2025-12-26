@@ -141,7 +141,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                     const SizedBox(height: 10),
                     RageInput(
                       controller: _topicController,
-                      hintText: "e.g. Pineapple Pizza, Remote Work...",
+                      hintText: "e.g. Trad Wife, Influencers...",
                       maxLines: 2,
                       onSubmit: _generateRagebait,
                     ),
