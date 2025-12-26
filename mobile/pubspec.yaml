@@ -96,9 +96,9 @@ flutter_launcher_icons:
 
 flutter_native_splash:
   color: "#121212" # Dark background matching the app theme
-  image: "assets/icon/icon.png" # Center the logo
+  # image: "assets/icon/splash_logo.png" # Removed per user request
   android_12:
-    image: "assets/icon/icon.png"
+    # image: "assets/icon/splash_logo.png"
     color: "#121212"
 
 

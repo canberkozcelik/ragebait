@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import '../../core/services/api_service.dart';
 import '../../core/services/paywall_service.dart';
+import '../../core/theme/app_colors.dart';
 
  class PaywallSheet extends ConsumerStatefulWidget {
   const PaywallSheet({super.key});
@@ -62,7 +63,7 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
        if (!mounted) return;
 
        if (success) {
-         // handled in helper
+         // success
        } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('No active subscriptions found')),
@@ -85,7 +86,7 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
     return Container(
       padding: const EdgeInsets.all(24.0),
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface, // Dark background
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -93,43 +94,78 @@ class _PaywallSheetState extends ConsumerState<PaywallSheet> {
         children: [
           const Text(
             'Unlock Unlimited Rage ⚡️',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 24, 
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary, // White text
+            ),
           ),
           const SizedBox(height: 16),
           _isLoading
-              ? const CircularProgressIndicator()
+              ? const CircularProgressIndicator(color: AppColors.textPrimary)
               : _offering != null
                   ? Column(
                       children: [
                         ListTile(
-                          title: Text(_offering!.storeProduct.title),
-                          subtitle: Text(_offering!.storeProduct.description),
-                          trailing: Text(_offering!.storeProduct.priceString),
+                          title: Text(
+                            _offering!.storeProduct.title,
+                            style: const TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            _offering!.storeProduct.description,
+                            style: const TextStyle(color: AppColors.textSecondary),
+                          ),
+                          trailing: Text(
+                            _offering!.storeProduct.priceString,
+                            style: const TextStyle(color: AppColors.textPrimary, fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
                           onTap: _purchase,
                           shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: Colors.black12),
+                            side: const BorderSide(color: Colors.white12), // Subtle border
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          tileColor: Colors.white10, // Slight glass effect
                         ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: _isPurchasing ? null : _purchase,
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor: Colors.black,
-                            foregroundColor: Colors.white,
+                        const SizedBox(height: 24),
+                        
+                        // Subscribe Button
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: AppColors.primaryGradient,
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: _isPurchasing
-                              ? const CircularProgressIndicator(color: Colors.white)
-                              : const Text('Subscribe Now'),
+                          child: ElevatedButton(
+                            onPressed: _isPurchasing ? null : _purchase,
+                            style: ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
+                              backgroundColor: Colors.transparent, // Use container gradient
+                              shadowColor: Colors.transparent,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                            child: _isPurchasing
+                                ? const CircularProgressIndicator(color: Colors.white)
+                                : const Text(
+                                    'Subscribe Now',
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                          ),
                         ),
+                        
+                        const SizedBox(height: 12),
                         TextButton(
                           onPressed: _isPurchasing ? null : _restore,
-                          child: const Text('Restore Purchases'),
+                          child: const Text(
+                            'Restore Purchases',
+                            style: TextStyle(color: AppColors.textDim),
+                          ),
                         ),
                       ],
                     )
-                  : const Text('Failed to load offerings'),
+                  : const Text(
+                      'Failed to load offerings',
+                      style: TextStyle(color: AppColors.error),
+                    ),
           const SizedBox(height: 16),
         ],
       ),

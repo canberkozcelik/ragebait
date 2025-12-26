@@ -39,7 +39,6 @@ class PaywallService {
     } on PlatformException catch (e) {
       var errorCode = PurchasesErrorHelper.getErrorCode(e);
       if (errorCode != PurchasesErrorCode.purchaseCancelledError) {
-         // print("Error purchasing: $e");
       }
       return false;
     }
@@ -50,7 +49,6 @@ class PaywallService {
       CustomerInfo customerInfo = await Purchases.restorePurchases();
       return customerInfo.entitlements.all[_entitlementId]?.isActive ?? false;
     } on PlatformException catch (_) {
-       // print("Error restoring: $e");
       return false;
     }
   }
@@ -62,7 +60,6 @@ class PaywallService {
         return offerings.current!.availablePackages;
       }
     } on PlatformException catch (_) {
-       // print("Error fetching offerings: $e");
     }
     return [];
   }

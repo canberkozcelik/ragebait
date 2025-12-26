@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/components/glass_card.dart';
@@ -83,8 +84,7 @@ class _MainScreenState extends ConsumerState<MainScreen> {
 
     if (success == true) {
        if (!mounted) return;
-       // Retry generation automatically if they purchased? 
-       // For now, just let them tap the button again.
+       
        ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("You are now UNLIMITED! 🔥")),
         );
@@ -178,8 +178,18 @@ class _MainScreenState extends ConsumerState<MainScreen> {
                       ),
                       const SizedBox(height: 20),
                       TextButton.icon(
-                        onPressed: () {
-                           // Clipboard logic would go here
+                        onPressed: () async {
+                          if (_generatedResult != null) {
+                              final messenger = ScaffoldMessenger.of(context);
+                              await Clipboard.setData(ClipboardData(text: _generatedResult!));
+                              
+                              messenger.showSnackBar(
+                                const SnackBar(
+                                  content: Text("Copied to clipboard! 📋"),
+                                  duration: Duration(seconds: 1),
+                                ),
+                              );
+                            }
                         },
                         icon: const Icon(Icons.copy, size: 18),
                         label: const Text("Copy Text"),
