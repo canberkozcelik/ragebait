@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'core/di/injection.dart';
-import 'features/ragebait/presentation/bloc/ragebait_bloc.dart';
-import 'features/ragebait/presentation/pages/home_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'core/theme/app_theme.dart';
+import 'features/home/main_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  configureDependencies();
-  runApp(const MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  
+  runApp(const ProviderScope(child: RagebaitApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class RagebaitApp extends StatelessWidget {
+  const RagebaitApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Ragebait Generator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: BlocProvider(
-        create: (context) => getIt<RagebaitBloc>(),
-        child: const HomePage(),
-      ),
+      title: 'Ragebait',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.darkTheme,
+      home: const MainScreen(),
     );
   }
 }
