@@ -1,4 +1,4 @@
-package com.example.ragebait
+package ai.ragebait.app
 
 import io.flutter.embedding.android.FlutterActivity
 
