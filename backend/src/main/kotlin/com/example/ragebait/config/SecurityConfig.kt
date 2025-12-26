@@ -4,44 +4,42 @@ import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
 import io.github.bucket4j.Bucket4j
 import io.github.bucket4j.Refill
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import org.springframework.web.servlet.HandlerInterceptor
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Component
+import org.springframework.web.server.ServerWebExchange
+import org.springframework.web.server.WebFilter
+import org.springframework.web.server.WebFilterChain
+import reactor.core.publisher.Mono
+import java.nio.charset.StandardCharsets
 import java.time.Duration
-import jakarta.servlet.http.HttpServletRequest
-import jakarta.servlet.http.HttpServletResponse
 
-@Configuration
-class SecurityConfig : WebMvcConfigurer {
+@Component
+class RateLimitFilter : WebFilter {
 
-    @Bean
-    fun rateLimitInterceptor(): RateLimitInterceptor {
-        return RateLimitInterceptor()
-    }
-
-    override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(rateLimitInterceptor())
-            .addPathPatterns("/api/**")
-    }
-}
-
-class RateLimitInterceptor : HandlerInterceptor {
     private val buckets = mutableMapOf<String, Bucket>()
 
-    override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
-        val ip = request.remoteAddr
+    override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        val path = exchange.request.path.value()
+
+        // Only rate limit API endpoints
+        if (!path.startsWith("/api")) {
+            return chain.filter(exchange)
+        }
+
+        val ip = exchange.request.remoteAddress?.address?.hostAddress ?: "unknown"
         val bucket = buckets.computeIfAbsent(ip) { createNewBucket() }
 
         if (bucket.tryConsume(1)) {
-            return true
+            return chain.filter(exchange)
         }
 
-        response.status = HttpStatus.TOO_MANY_REQUESTS.value()
-        response.writer.write("Rate limit exceeded. Try again later.")
-        return false
+        exchange.response.statusCode = HttpStatus.TOO_MANY_REQUESTS
+        exchange.response.headers.contentType = MediaType.TEXT_PLAIN
+        val bytes = "Rate limit exceeded. Try again later.".toByteArray(StandardCharsets.UTF_8)
+        val buffer = exchange.response.bufferFactory().wrap(bytes)
+        return exchange.response.writeWith(Mono.just(buffer))
     }
 
     private fun createNewBucket(): Bucket {

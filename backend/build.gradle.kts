@@ -21,42 +21,48 @@ repositories {
 }
 
 dependencies {
+	// Core
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-logging")
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+	// Reactive Web (WebFlux - Netty)
+	// IMPORTANT: do NOT include 'spring-boot-starter-web' (MVC/Tomcat) to avoid conflicts
+	implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+	// Database
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.flywaydb:flyway-core")
 	implementation("org.flywaydb:flyway-database-postgresql")
-	implementation("org.springframework.boot:spring-boot-starter-logging")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+	runtimeOnly("org.postgresql:postgresql")
+	runtimeOnly("com.h2database:h2")
 
-	implementation("org.springframework.boot:spring-boot-starter-webflux")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
+	// Authentication & Firebase
+	implementation("com.google.firebase:firebase-admin:9.2.0")
 	implementation("com.google.oauth-client:google-oauth-client:1.33.3")
+	implementation("com.google.auth:google-auth-library-oauth2-http:1.11.0")
+	// Legacy Google APIs (can likely be reduced, but keeping for stability)
 	implementation("com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0")
 	implementation("com.google.api-client:google-api-client:1.35.0")
-	implementation("com.google.auth:google-auth-library-oauth2-http:1.11.0")
-	implementation("com.google.firebase:firebase-admin:9.2.0")
 
-	// OpenAPI Documentation
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0")
+	// Documentation (WebFlux version)
+	implementation("org.springdoc:springdoc-openapi-starter-webflux-ui:2.4.0")
 
-	// Rate Limiting
+	// Utilities (Rate Limiting)
 	implementation("com.github.vladimir-bukhtoyarov:bucket4j-core:7.6.0")
 
 	// Monitoring
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("io.micrometer:micrometer-registry-prometheus")
 
-	runtimeOnly("com.h2database:h2")
-	runtimeOnly("org.postgresql:postgresql")
-
+	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+	testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("io.projectreactor:reactor-test")
-
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

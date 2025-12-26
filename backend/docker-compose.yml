@@ -11,6 +11,7 @@ services:
       - DB_DRIVER=org.postgresql.Driver
       - DB_PLATFORM=org.hibernate.dialect.PostgreSQLDialect
       - GEMINI_CREDENTIALS_JSON=file:/app/secrets/service-account.json
+      - FIREBASE_CREDENTIALS_JSON=file:/app/secrets/service-account.json
     depends_on:
       - postgres
     volumes:

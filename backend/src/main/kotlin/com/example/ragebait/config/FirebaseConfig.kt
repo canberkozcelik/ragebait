@@ -2,6 +2,7 @@ package com.example.ragebait.config
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.FirebaseOptions
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -15,7 +16,7 @@ class FirebaseConfig {
 
     private val logger = LoggerFactory.getLogger(FirebaseConfig::class.java)
 
-    @Value("\${gemini.credentials.json}")
+    @Value("\${firebase.credentials.json}")
     lateinit var credentialsResource: Resource
 
     @Bean
@@ -34,5 +35,10 @@ class FirebaseConfig {
             logger.error("Failed to initialize Firebase: {}", e.message)
             throw RuntimeException("Failed to initialize Firebase", e)
         }
+    }
+
+    @Bean
+    fun firebaseAuth(firebaseApp: FirebaseApp): FirebaseAuth {
+        return FirebaseAuth.getInstance(firebaseApp)
     }
 }
