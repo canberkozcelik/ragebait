@@ -13,7 +13,9 @@ import reactor.core.publisher.Mono
 import reactor.util.context.Context
 
 @Component
-class AuthenticationFilter : WebFilter {
+class AuthenticationFilter(
+    private val firebaseAuth: FirebaseAuth
+) : WebFilter {
 
     private val logger = LoggerFactory.getLogger(AuthenticationFilter::class.java)
 
@@ -34,21 +36,12 @@ class AuthenticationFilter : WebFilter {
 
         val authHeader = exchange.request.headers.getFirst(HttpHeaders.AUTHORIZATION)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            // For now, allow unauthenticated usage? 
-            // The plan says we need auth to enforce quota. 
-            // If strictly anonymous auth is required, we should block.
-            // Let's Reject.
             return Mono.error(UnauthorizedException("Missing or invalid Authorization header"))
         }
 
         val token = authHeader.substring(7)
         return try {
-            // FirebaseAuth is blocking, so we ideally wrap in blocking pool if heavy, 
-            // but verifying token is usually fast enough or we accept the minor block for simplicity.
-            // For high performace, verifyIdTokenAsync should be converted to Mono.
-            
-            // Using a simple blocking call for MVP
-            val decodedToken = FirebaseAuth.getInstance().verifyIdToken(token)
+            val decodedToken = firebaseAuth.verifyIdToken(token)
             val uid = decodedToken.uid
             
             chain.filter(exchange)
